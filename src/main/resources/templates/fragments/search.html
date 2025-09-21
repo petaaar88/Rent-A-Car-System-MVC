@@ -1,0 +1,26 @@
+<form th:fragment="search" th:action="@{/cars}" method="get" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="d-flex mb-3 gap-2">
+        <input type="text" class="form-control" placeholder="Search..." aria-label="Search" name="search">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+
+    <div class="d-flex mb-3 gap-2">
+        <select class="form-select" aria-label="Select Brand" name="brand">
+            <option value="" disabled selected>Select Brand</option>
+            <option th:each="brand : ${brands}" th:value="${brand.name}" th:text="${brand.name}"></option>
+        </select>
+
+        <select class="form-select" id="engineType" name="engineType">
+            <option value="" disabled selected>Select Engine</option>
+            <option th:each="type : ${T(com.metropolitan.rent_a_car_system.enums.EngineType).values()}"
+                    th:value="${type}"
+                    th:text="${type.getDisplayName()}"></option>
+        </select>
+
+        <!-- Category select -->
+        <select class="form-select" aria-label="Select Category" name="category">
+            <option value="" disabled selected>Select Category</option>
+            <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+        </select>
+    </div>
+</form>

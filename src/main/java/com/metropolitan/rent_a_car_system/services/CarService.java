@@ -36,4 +36,38 @@ public class CarService {
 
         db.setCars(new ArrayList<>(List.of(car1, car2, car3)));
     }
+
+    public List<Car> search(String search, String brand, String category, String engineType) {
+        return db.getCars().stream()
+                .filter(car -> {
+                    boolean matches = true;
+
+                    if (search != null && !search.isEmpty()) {
+                        String lowerSearch = search.toLowerCase();
+                        matches = matches && (
+                                car.getModel().toLowerCase().contains(lowerSearch) ||
+                                        car.getBrand().getName().toLowerCase().contains(lowerSearch) ||
+                                        car.getCategory().getName().toLowerCase().contains(lowerSearch) ||
+                                        car.getEngineType().name().toLowerCase().contains(lowerSearch)
+                        );
+                    }
+
+                    if (brand != null && !brand.isEmpty()) {
+                        matches = matches && car.getBrand().getName().equalsIgnoreCase(brand);
+                    }
+
+                    if (category != null && !category.isEmpty()) {
+                        matches = matches && car.getCategory().getName().equalsIgnoreCase(category);
+                    }
+
+                    if (engineType != null && !engineType.isEmpty()) {
+                        matches = matches && car.getEngineType().name().equalsIgnoreCase(engineType);
+                    }
+
+                    return matches;
+                })
+                .toList();
+    }
+
+
 }
