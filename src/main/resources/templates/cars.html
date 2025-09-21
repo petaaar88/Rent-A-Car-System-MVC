@@ -24,10 +24,10 @@
                 <img th:src="@{https://picsum.photos/seed/{carId}/800/600(carId=${car.id})}"
                      class="card-img-top" alt="Car Image">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${car.model} + ' - ' + ${car.brand.name}"></h5>
+                    <h5 class="card-title" th:text="${car.model} + ' - ' + ${car.brand}"></h5>
                     <p class="card-text">
                         Engine: <span th:text="${car.engineType}"></span><br>
-                        Category: <span th:text="${car.category.name}"></span>
+                        Category: <span th:text="${car.category}"></span>
                     </p>
                     <a th:href="@{/cars/{id}(id=${car.id})}" class="btn btn-primary">View</a>
                 </div>

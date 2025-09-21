@@ -43,11 +43,10 @@ public class CarController {
 
     @GetMapping("/cars/{id}")
     public String getCar(@PathVariable("id")UUID id, Model model) {
-        Car car = carService.getCar(id); // proveri da li vraća null
-        if (car == null) {
-            // možeš vratiti custom error stranicu ili redirect
+        Car car = carService.getCar(id);
+        if (car == null)
             return "redirect:/cars";
-        }
+
         model.addAttribute("car", car);
         return "car-details";
     }

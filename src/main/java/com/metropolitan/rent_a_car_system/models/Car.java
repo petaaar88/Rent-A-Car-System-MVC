@@ -1,5 +1,6 @@
 package com.metropolitan.rent_a_car_system.models;
 
+import com.metropolitan.rent_a_car_system.dto.CarOverview;
 import com.metropolitan.rent_a_car_system.enums.EngineType;
 
 import java.util.List;
@@ -140,5 +141,9 @@ public class Car {
 
     public void setCategory(CarCategory category) {
         this.category = category;
+    }
+
+    public CarOverview toCarOverview() {
+        return new CarOverview(id, brand.getName(), model, engineType.getDisplayName(),category.getName());
     }
 }

@@ -1,6 +1,7 @@
 package com.metropolitan.rent_a_car_system.services;
 
 import com.metropolitan.rent_a_car_system.db.Database;
+import com.metropolitan.rent_a_car_system.dto.CarOverview;
 import com.metropolitan.rent_a_car_system.enums.EngineType;
 import com.metropolitan.rent_a_car_system.models.Car;
 import com.metropolitan.rent_a_car_system.models.CarBrand;
@@ -37,7 +38,7 @@ public class CarService {
         db.setCars(new ArrayList<>(List.of(car1, car2, car3)));
     }
 
-    public List<Car> search(String search, String brand, String category, String engineType) {
+    public List<CarOverview> search(String search, String brand, String category, String engineType) {
         return db.getCars().stream()
                 .filter(car -> {
                     boolean matches = true;
@@ -66,7 +67,7 @@ public class CarService {
 
                     return matches;
                 })
-                .toList();
+                .map( car -> car.toCarOverview()).toList();
     }
 
     public Car getCar(UUID id) {
