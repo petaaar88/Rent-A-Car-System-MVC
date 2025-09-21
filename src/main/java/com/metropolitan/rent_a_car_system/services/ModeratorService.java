@@ -21,7 +21,7 @@ public class ModeratorService {
 
     @PostConstruct
     public void loadModerators() {
-        db.setModerators(List.of(new Moderator(UUID.randomUUID(), "admin", "admin")));
+        db.setModerators(new ArrayList<>(List.of(new Moderator(UUID.randomUUID(), "admin", "admin"))));
     }
 
     public Optional<Moderator> login(String username, String password) {

@@ -34,6 +34,6 @@ public class CarService {
         Car car2 = new Car(UUID.randomUUID(), ford, suv, "Explorer", "NS456CD", "Plava", 2019, EngineType.DIESEL, 200, 40.0, true, 30000, new ArrayList<>());
         Car car3 = new Car(UUID.randomUUID(), toyota, suv, "RAV4", "NI789EF", "Bela", 2021, EngineType.HYBRID, 180, 35.0, true, 20000, new ArrayList<>());
 
-        db.setCars(List.of(car1, car2, car3));
+        db.setCars(new ArrayList<>(List.of(car1, car2, car3)));
     }
 }
