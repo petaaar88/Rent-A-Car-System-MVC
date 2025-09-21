@@ -6,32 +6,34 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<header th:replace="fragments/menu :: menu"></header>
+<header th:replace="~{fragments/menu :: menu}"></header>
 
-<div class="container">
-    <h2>Vehicles</h2>
-    <div th:replace="fragments/search :: search"></div>
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-4 mb-4" th:each="car : ${cars}">
-                <div class="card h-100">
-                    <!-- Random car image -->
-                    <img th:src="@{https://picsum.photos/seed/{carId}/800/600(carId=${car.id})}" class="card-img-top" alt="Car Image">
+<div class="container h-100 mt-3">
+    <h2 class="mb-4">Vehicles</h2>
+    <div th:replace="~{fragments/search :: search}"></div>
 
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${car.model} + ' - ' + ${car.brand.name}"></h5>
-                        <p class="card-text">
-                            Engine: <span th:text="${car.engineType}"></span><br>
-                            Category: <span th:text="${car.category.name}"></span>
-                        </p>
-                        <a th:href="@{/cars/{id}(id=${car.id})}" class="btn btn-primary">View</a>
-                    </div>
+    <div class="d-flex justify-content-center align-items-center"
+         th:if="${#lists.isEmpty(cars)}"
+         style="min-height: 300px;">
+        <p class="text-center text-muted fs-3">No cars available.</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4" th:unless="${#lists.isEmpty(cars)}">
+        <div class="col" th:each="car : ${cars}">
+            <div class="card h-100">
+                <img th:src="@{https://picsum.photos/seed/{carId}/800/600(carId=${car.id})}"
+                     class="card-img-top" alt="Car Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${car.model} + ' - ' + ${car.brand.name}"></h5>
+                    <p class="card-text">
+                        Engine: <span th:text="${car.engineType}"></span><br>
+                        Category: <span th:text="${car.category.name}"></span>
+                    </p>
+                    <a th:href="@{/cars/{id}(id=${car.id})}" class="btn btn-primary">View</a>
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

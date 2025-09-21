@@ -1,12 +1,16 @@
 package com.metropolitan.rent_a_car_system.controllers;
 
+import com.metropolitan.rent_a_car_system.models.Car;
 import com.metropolitan.rent_a_car_system.services.CarBrandService;
 import com.metropolitan.rent_a_car_system.services.CarCategoryService;
 import com.metropolitan.rent_a_car_system.services.CarService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.UUID;
 
 @Controller
 public class CarController {
@@ -35,5 +39,16 @@ public class CarController {
         model.addAttribute("categories", carCategoryService.getCarCategories());
 
         return "cars";
+    }
+
+    @GetMapping("/cars/{id}")
+    public String getCar(@PathVariable("id")UUID id, Model model) {
+        Car car = carService.getCar(id); // proveri da li vraća null
+        if (car == null) {
+            // možeš vratiti custom error stranicu ili redirect
+            return "redirect:/cars";
+        }
+        model.addAttribute("car", car);
+        return "car-details";
     }
 }

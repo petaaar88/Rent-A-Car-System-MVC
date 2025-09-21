@@ -69,5 +69,8 @@ public class CarService {
                 .toList();
     }
 
+    public Car getCar(UUID id) {
+        return db.getCars().stream().filter(car -> car.getId().equals(id)).findFirst().orElse(null);
+    }
 
 }
