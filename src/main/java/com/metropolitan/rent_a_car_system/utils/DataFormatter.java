@@ -7,7 +7,12 @@ import java.text.DecimalFormat;
 @Component("dataFormatUtils")
 public class DataFormatter {
     public static String formatPrice(double price) {
-        DecimalFormat df = new DecimalFormat("0.00$");
+        DecimalFormat df = new DecimalFormat("#,###.00$");
         return df.format(price);
+    }
+
+    public static String formatNumber(int number) {
+        DecimalFormat df = new DecimalFormat("#,###");
+        return df.format(number);
     }
 }

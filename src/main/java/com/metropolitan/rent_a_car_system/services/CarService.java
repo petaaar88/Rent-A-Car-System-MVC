@@ -5,11 +5,14 @@ import com.metropolitan.rent_a_car_system.dto.AllReservationsDTO;
 import com.metropolitan.rent_a_car_system.dto.CarDetailsDTO;
 import com.metropolitan.rent_a_car_system.dto.CarOverviewDTO;
 import com.metropolitan.rent_a_car_system.enums.EngineType;
+import com.metropolitan.rent_a_car_system.exceptions.CreateCarException;
 import com.metropolitan.rent_a_car_system.models.Car;
 import com.metropolitan.rent_a_car_system.models.CarBrand;
 import com.metropolitan.rent_a_car_system.models.CarCategory;
+import com.metropolitan.rent_a_car_system.utils.CarValidator;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,33 @@ public class CarService {
         Car car3 = new Car(UUID.randomUUID(), toyota, suv, "RAV4", "NI789EF", "Bela", 2021, EngineType.HYBRID, 180, 35.0, true, 20000, new ArrayList<>());
 
         db.setCars(new ArrayList<>(List.of(car1, car2, car3)));
+    }
+
+    public void createCar( String model,
+                           String brand,
+                           String category,
+                           String engineType,
+                           double pricePerDay,
+                           String color,
+                           int year,
+                           String registrationNumber,
+                           double milage,
+                           int horsePower)throws CreateCarException {
+
+        CarValidator.validate(model, brand, category,color,registrationNumber,EngineType.valueOf(engineType), pricePerDay, year, milage, horsePower);
+
+        db.getCars().add(new Car(UUID.randomUUID(), db.getCarBrands().stream().filter(carBrand -> carBrand.getName().equals(brand)).findFirst().orElse(null),
+                db.getCarCategories().stream().filter(carCategory -> carCategory.getName().equals(category)).findFirst().orElse(null),
+                model,
+                registrationNumber,
+                color,
+                year,
+                EngineType.valueOf(engineType),
+                horsePower,
+                milage, true,
+                pricePerDay,
+                new ArrayList<>()));
+
     }
 
     public List<CarOverviewDTO> search(String search, String brand, String category, String engineType) {

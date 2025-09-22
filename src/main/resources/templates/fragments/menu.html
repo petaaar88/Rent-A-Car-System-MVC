@@ -8,7 +8,8 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link text-white" th:href="@{/cars}">Vehicles</a>
-                    <a class="nav-link text-white" th:if="${!isAdmin}" th:href=@{/reservations}>My Reservations</a>
+                    <a class="nav-link text-white" th:if="${!isAdmin}" th:href="@{/reservations}">My Reservations</a>
+                    <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/create-car}">Create Car</a>
                 </div>
                 <div class="navbar-nav ms-auto">
                     <a class=" btn btn-danger cursor-pointer " th:href="@{/logout}">Logout</a>

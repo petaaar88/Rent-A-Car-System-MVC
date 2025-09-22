@@ -2,7 +2,9 @@ package com.metropolitan.rent_a_car_system.controllers;
 
 import com.metropolitan.rent_a_car_system.dto.AllReservationsDTO;
 import com.metropolitan.rent_a_car_system.dto.CarDetailsDTO;
+import com.metropolitan.rent_a_car_system.enums.EngineType;
 import com.metropolitan.rent_a_car_system.enums.UserRole;
+import com.metropolitan.rent_a_car_system.exceptions.CreateCarException;
 import com.metropolitan.rent_a_car_system.models.SessionUser;
 import com.metropolitan.rent_a_car_system.services.CarBrandService;
 import com.metropolitan.rent_a_car_system.services.CarCategoryService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
@@ -35,6 +38,19 @@ public class CarController {
         this.dataFormatUtils = dataFormatUtils;
     }
 
+    @GetMapping("/create-car")
+    public String createCar(Model model) {
+        if (!sessionUser.isLoggedIn()) return "redirect:/login";
+        if (!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
+
+        model.addAttribute("brands", carBrandService.getCarBrands());
+        model.addAttribute("categories", carCategoryService.getCarCategories());
+        model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
+        model.addAttribute("error",false);
+
+        return "create-car";
+    }
+
     @GetMapping("/cars")
     public String getCars(
             @RequestParam(required = false) String search,
@@ -50,6 +66,35 @@ public class CarController {
         model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
 
         return "cars";
+    }
+
+    @PostMapping("/cars")
+    public String createCar( @RequestParam String model,
+                             @RequestParam String brand,
+                             @RequestParam String category,
+                             @RequestParam String engineType,
+                             @RequestParam double pricePerDay,
+                             @RequestParam String color,
+                             @RequestParam int year,
+                             @RequestParam String registrationNumber,
+                             @RequestParam double milage,
+                             @RequestParam int horsePower,
+                             Model modelUI) {
+
+        if (!sessionUser.isLoggedIn()) return "redirect:/login";
+        if (!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
+
+        try{
+            carService.createCar(model, brand, category, engineType, pricePerDay, color, year, registrationNumber, milage, horsePower);
+
+        } catch (CreateCarException e) {
+            modelUI.addAttribute("error", true);
+            modelUI.addAttribute("errorMessage", e.getMessage());
+            modelUI.addAttribute("isAdmin", sessionUser.getRole().equals(UserRole.ADMIN));
+
+            return "create-car";
+        }
+        return "redirect:/cars";
     }
 
     @GetMapping("/cars/{id}")

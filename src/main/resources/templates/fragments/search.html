@@ -1,6 +1,6 @@
 <form th:fragment="search" th:action="@{/cars}" method="get" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="d-flex mb-3 gap-2">
-        <input type="text" class="form-control" placeholder="Search..." aria-label="Search" name="search">
+        <input type="text" class="form-control" maxlength="20" placeholder="Search..." aria-label="Search" name="search">
         <button class="btn btn-primary" type="submit">Search</button>
     </div>
 
@@ -17,7 +17,6 @@
                     th:text="${type.getDisplayName()}"></option>
         </select>
 
-        <!-- Category select -->
         <select class="form-select" aria-label="Select Category" name="category">
             <option value="" disabled selected>Select Category</option>
             <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>

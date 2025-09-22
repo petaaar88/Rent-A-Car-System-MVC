@@ -21,7 +21,7 @@
                     <p class="card-text">
                         Engine: <span class="fw-bold" th:text="${car.engineType}"></span><br>
                         Category: <span class="fw-bold" th:text="${car.category}"></span><br>
-                        Milage: <span class="fw-bold" th:text="${car.mileage}"></span><br>
+                        Milage: <span class="fw-bold" th:text="${dataFormatUtils.formatNumber(car.mileage)} + ' km'"></span><br>
                         Color: <span class="fw-bold" th:text="${car.color}"></span><br>
                         Year of Manufacture: <span class="fw-bold" th:text="${car.year}"></span><br>
                         Horse Power: <span class="fw-bold" th:text="${car.horsePower}"></span><br>
