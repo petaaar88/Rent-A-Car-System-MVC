@@ -9,7 +9,6 @@ public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError() {
-        // svaki error ide na /cars
         return "redirect:/cars";
     }
 }
