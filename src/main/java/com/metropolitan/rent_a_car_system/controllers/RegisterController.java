@@ -1,9 +1,11 @@
 package com.metropolitan.rent_a_car_system.controllers;
 
 import com.metropolitan.rent_a_car_system.enums.UserRole;
+import com.metropolitan.rent_a_car_system.exceptions.RegisterException;
 import com.metropolitan.rent_a_car_system.models.Customer;
 import com.metropolitan.rent_a_car_system.models.SessionUser;
 import com.metropolitan.rent_a_car_system.services.CustomerService;
+import com.metropolitan.rent_a_car_system.services.RegisterService;
 import com.metropolitan.rent_a_car_system.utils.CredentialsValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,19 +18,18 @@ import java.util.UUID;
 @Controller
 public class RegisterController {
 
-    private final CustomerService customerService;
+    private final RegisterService registerService;
     private final SessionUser sessionUser;
 
-    public RegisterController(CustomerService customerService, SessionUser sessionUser) {
-        this.customerService = customerService;
+    public RegisterController(RegisterService registerService, SessionUser sessionUser) {
+        this.registerService = registerService;
         this.sessionUser = sessionUser;
     }
 
     @GetMapping("/register")
     public String showForm(Model model) {
         model.addAttribute("error", false);
-        model.addAttribute("exists", false);
-        model.addAttribute("invalidData", false);
+        model.addAttribute("errorMessage", false);
 
         return "register";
     }
@@ -43,22 +44,16 @@ public class RegisterController {
                             @RequestParam String address,
                             Model model) {
 
-        if(!CredentialsValidator.validateRegistration(username, password, firstName, lastName, email, phone, address)){
-            model.addAttribute("invalidData", true);
+        try{
+            registerService.register(username, password, firstName, lastName, email, phone, address, sessionUser);
+        }
+        catch (RegisterException e){
+            model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }
 
-        if(customerService.customerExists(username)){
-            model.addAttribute("exists", true);
-            return "register";
-        }
+        return "redirect:/cars";
 
-        Customer newCustomer = new Customer(UUID.randomUUID(),(username), email, username, password, phone, address);
-        customerService.addCustomer(newCustomer);
-        sessionUser.setRole(UserRole.USER);
-        sessionUser.setUserId(newCustomer.getId());
-
-        return "redirect:/cars"; //TODO: uradi drugi redirect
     }
 
 

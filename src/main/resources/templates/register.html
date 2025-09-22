@@ -11,13 +11,8 @@ bootstrap.min.css" rel="stylesheet">
 <div th:if="${error}" class="alert alert-warning">
     All fields are required!
 </div>
-<div th:if="${invalidData}" class="alert alert-warning">
-    Invalid data!
-</div>
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-<div th:if="${exists}" class="alert alert-danger">
-    Username already exists!
-</div>
 <form method="post" th:action="@{/register}">
     <div class="mb-3">
         <label class="form-label">Username</label>
