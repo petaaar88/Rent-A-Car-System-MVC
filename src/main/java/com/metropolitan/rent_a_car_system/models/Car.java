@@ -1,6 +1,7 @@
 package com.metropolitan.rent_a_car_system.models;
 
-import com.metropolitan.rent_a_car_system.dto.CarOverview;
+import com.metropolitan.rent_a_car_system.dto.CarDetailsDTO;
+import com.metropolitan.rent_a_car_system.dto.CarOverviewDTO;
 import com.metropolitan.rent_a_car_system.enums.EngineType;
 
 import java.util.List;
@@ -143,7 +144,11 @@ public class Car {
         this.category = category;
     }
 
-    public CarOverview toCarOverview() {
-        return new CarOverview(id, brand.getName(), model, engineType.getDisplayName(),category.getName());
+    public CarOverviewDTO toCarOverview() {
+        return new CarOverviewDTO(id, brand.getName(), model, engineType.getDisplayName(),category.getName(),pricePerDay);
+    }
+
+    public CarDetailsDTO toCarDetails() {
+        return new CarDetailsDTO(id, brand.getName(), category.getName(), model, registrationNumber, color, year, engineType.getDisplayName(), horsePower, pricePerDay, isAvailable, mileage);
     }
 }

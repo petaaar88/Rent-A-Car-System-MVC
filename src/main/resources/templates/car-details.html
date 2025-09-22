@@ -17,14 +17,31 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${car.model} + ' - ' + ${car.brand}"></h5>
+                    <h5 class="card-title fs-3" th:text="${car.brand} + ' - ' + ${car.model}"></h5>
                     <p class="card-text">
-                        Engine: <span th:text="${car.engineType}"></span><br>
-                        Category: <span th:text="${car.category}"></span>
+                        Engine: <span class="fw-bold" th:text="${car.engineType}"></span><br>
+                        Category: <span class="fw-bold" th:text="${car.category}"></span><br>
+                        Milage: <span class="fw-bold" th:text="${car.mileage}"></span><br>
+                        Color: <span class="fw-bold" th:text="${car.color}"></span><br>
+                        Year of Manufacture: <span class="fw-bold" th:text="${car.year}"></span><br>
+                        Horse Power: <span class="fw-bold" th:text="${car.horsePower}"></span><br>
+                        Registration Number: <span class="fw-bold" th:text="${car.registrationNumber}"></span>
                     </p>
+                    <p class="fs-4">Price Per Day: <span class="fw-bold" th:text="${dataFormatUtils.formatPrice(car.pricePerDay)}"></span></p>
+
+                    <div th:if="${unavailable && !isAdmin}" class="alert alert-danger">
+                        Vehicle is currently unavailable.
+                    </div>
+
                 </div>
             </div>
         </div>
+    </div>
+    <div th:if="${isAdmin}">
+        Prikazi Sve rezervacije
+    </div>
+    <div th:if="${!unavailable && !isAdmin}" class="alert alert-primary">
+        <div th:replace="~{fragments/reservation-form :: reservation-form(car=${car})}"></div>
     </div>
 </div>
 </body>
