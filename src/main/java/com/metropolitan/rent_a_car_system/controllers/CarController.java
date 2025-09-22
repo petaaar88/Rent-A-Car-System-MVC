@@ -1,8 +1,8 @@
 package com.metropolitan.rent_a_car_system.controllers;
 
+import com.metropolitan.rent_a_car_system.dto.AllReservationsDTO;
 import com.metropolitan.rent_a_car_system.dto.CarDetailsDTO;
 import com.metropolitan.rent_a_car_system.enums.UserRole;
-import com.metropolitan.rent_a_car_system.models.Car;
 import com.metropolitan.rent_a_car_system.models.SessionUser;
 import com.metropolitan.rent_a_car_system.services.CarBrandService;
 import com.metropolitan.rent_a_car_system.services.CarCategoryService;
@@ -47,6 +47,7 @@ public class CarController {
         model.addAttribute("cars", carService.search(search, brand, category, engineType));
         model.addAttribute("brands", carBrandService.getCarBrands());
         model.addAttribute("categories", carCategoryService.getCarCategories());
+        model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
 
         return "cars";
     }
@@ -62,6 +63,13 @@ public class CarController {
         model.addAttribute("unavailable",!car.isAvailable);
         model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
         model.addAttribute("dataFormatUtils", dataFormatUtils);
+        model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
+
+        if(sessionUser.getRole().equals(UserRole.ADMIN)) {
+            AllReservationsDTO allReservations = carService.getCarReservations(id);
+            model.addAttribute("currentReservations", allReservations.current);
+            model.addAttribute("pastReservations", allReservations.past);
+        }
 
         return "car-details";
     }

@@ -1,5 +1,7 @@
 package com.metropolitan.rent_a_car_system.models;
 
+import com.metropolitan.rent_a_car_system.dto.ReservationDTO;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -69,5 +71,6 @@ public class Reservation {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 
 }

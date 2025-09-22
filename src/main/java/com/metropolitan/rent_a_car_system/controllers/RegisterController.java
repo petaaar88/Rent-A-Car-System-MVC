@@ -28,6 +28,8 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String showForm(Model model) {
+        if(sessionUser.isLoggedIn()) return "redirect:/cars";
+
         model.addAttribute("error", false);
         model.addAttribute("errorMessage", false);
 
@@ -43,6 +45,7 @@ public class RegisterController {
                             @RequestParam String phone,
                             @RequestParam String address,
                             Model model) {
+
 
         try{
             registerService.register(username, password, firstName, lastName, email, phone, address, sessionUser);

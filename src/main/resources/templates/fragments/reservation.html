@@ -1,0 +1,39 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="reservation(reservation, canDelete)">
+    <div class="card mb-3 ms-0">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-2">
+                <img th:src="@{https://picsum.photos/seed/{reservation.id}/200/150(reservation.id=${reservation.id})}"
+                     class="img-fluid rounded-start" alt="Car Image">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body text-start">
+                    <div class="row">
+                        <div class="col-md-4 text-start">
+                            <a class="card-title fw-bold fs-4 text-decoration-none"
+                               th:href="@{/cars/{id}(id=${reservation.carId})}"
+                               th:text="${reservation.brand} + ' ' + ${reservation.model}"></a>
+                            <p class="mb-1"><strong>Start:</strong> <span th:text="${#dates.format(reservation.startDate, 'yyyy-MM-dd')}"></span></p>
+                            <p class="mb-1"><strong>End:</strong> <span th:text="${#dates.format(reservation.endDate, 'yyyy-MM-dd')}"></span></p>
+                        </div>
+                        <div class="col-md-4 text-start">
+                            <p class="mb-1"><strong>Registration:</strong> <span th:text="${reservation.registrationNumber}"></span></p>
+                            <p class="mb-1"><strong>Customer:</strong> <span th:text="${reservation.customerFullName}"></span></p>
+                            <p class="mb-1"><strong>Customer Phone:</strong> <span th:text="${reservation.customerPhoneNumber}"></span></p>
+                        </div>
+                        <div class="col-md-4 text-start">
+                            <p class="mb-1 fs-5"><strong>Total Price:</strong> <span th:text="${reservation.totalPrice} + ' $'"></span></p>
+                            <p class="mb-1 fs-5"><strong>Price/Day:</strong> <span th:text="${reservation.pricePerDay} + ' $'"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${canDelete}" class="col-md-2 d-flex align-items-center justify-content-center">
+                <form method="post" th:action="@{/reservations/{id}/delete(id=${reservation.id})}">
+                    <button type="submit" class="btn btn-danger">
+                        Cancel Reservation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
