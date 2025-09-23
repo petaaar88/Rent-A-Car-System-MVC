@@ -33,15 +33,25 @@ public class CarService {
 
         CarBrand toyota = db.getCarBrands().get(0);
         CarBrand ford = db.getCarBrands().get(1);
+        CarBrand bmw = db.getCarBrands().get(2);
+        CarBrand honda = db.getCarBrands().get(3);
+        CarBrand mercedes = db.getCarBrands().get(4);
+        CarBrand audi = db.getCarBrands().get(5);
 
         CarCategory sedan = db.getCarCategories().get(0);
         CarCategory suv = db.getCarCategories().get(1);
+        CarCategory hatchback = db.getCarCategories().get(2);
 
         Car car1 = new Car(UUID.randomUUID(), toyota, sedan, "Corolla", "BG123AB", "Crvena", 2020, EngineType.PETROL, 132, 25.0, true, 15000, new ArrayList<>());
         Car car2 = new Car(UUID.randomUUID(), ford, suv, "Explorer", "NS456CD", "Plava", 2019, EngineType.DIESEL, 200, 40.0, true, 30000, new ArrayList<>());
         Car car3 = new Car(UUID.randomUUID(), toyota, suv, "RAV4", "NI789EF", "Bela", 2021, EngineType.HYBRID, 180, 35.0, true, 20000, new ArrayList<>());
 
-        db.setCars(new ArrayList<>(List.of(car1, car2, car3)));
+        Car car4 = new Car(UUID.randomUUID(), bmw, sedan, "320i", "BG321XY", "Crna", 2022, EngineType.PETROL, 190, 45.0, true, 12000, new ArrayList<>());
+        Car car5 = new Car(UUID.randomUUID(), audi, suv, "Q5", "NS654YZ", "Siva", 2021, EngineType.DIESEL, 210, 50.0, true, 25000, new ArrayList<>());
+        Car car6 = new Car(UUID.randomUUID(), mercedes, hatchback, "Yaris", "NI987WX", "Plava", 2023, EngineType.HYBRID, 110, 30.0, true, 8000, new ArrayList<>());
+
+
+        db.setCars(new ArrayList<>(List.of(car1, car2, car3, car4, car5, car6)));
     }
 
     public void createCar( String model,

@@ -65,7 +65,7 @@
             <h3>Past Reservations</h3>
             <ul class="">
                 <li class="list-group-item" th:each="reservation : ${pastReservations}">
-                    <div th:replace="~{fragments/reservation :: reservation(reservation=${pastReservations}, canDelete=false)}"></div>
+                    <div th:replace="~{fragments/reservation :: reservation(reservation=${reservation}, canDelete=false)}"></div>
                 </li>
                 <li class="list-group-item text-muted" th:if="${#lists.isEmpty(pastReservations)}">
                     No past reservations
