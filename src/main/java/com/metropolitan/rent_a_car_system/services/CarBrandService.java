@@ -1,6 +1,7 @@
 package com.metropolitan.rent_a_car_system.services;
 
 import com.metropolitan.rent_a_car_system.db.Database;
+import com.metropolitan.rent_a_car_system.exceptions.BrandException;
 import com.metropolitan.rent_a_car_system.models.CarBrand;
 import com.metropolitan.rent_a_car_system.models.Moderator;
 import jakarta.annotation.PostConstruct;
@@ -37,9 +38,33 @@ public class CarBrandService {
         return db.getCarBrands();
     }
 
-    public void addCarBrand(CarBrand carBrand) {
-        db.getCarBrands().add(carBrand);
+    public void addCarBrand(String name, String description)throws BrandException {
+        if (db.getCarBrands().stream().anyMatch(carBrand -> carBrand.getName().equals(name)))
+            throw new BrandException("Brand with name " + name + " already exists.");
+
+        if(name.trim().length() == 0 || description.trim().length() == 0)
+            throw new BrandException("Brand name and description cannot be empty.");
+
+        db.getCarBrands().add(new CarBrand(UUID.randomUUID(), name, description));
     }
+
+    public CarBrand getCarBrandByName(String name) {
+        return db.getCarBrands().stream()
+                .filter(carBrand -> carBrand.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean deleteCarBrand(UUID id) {
+        boolean existsCarWithBrand = db.getCars().stream()
+                .anyMatch(car -> car.getBrand().getId().equals(id));
+
+        if (existsCarWithBrand)
+            return false;
+
+        return db.getCarBrands().removeIf(carBrand -> carBrand.getId().equals(id));
+    }
+
 
     public Optional<CarBrand> getCarBrandById(UUID id) {
         return db.getCarBrands().stream().filter(carBrand -> carBrand.getId().equals(id)).findFirst();

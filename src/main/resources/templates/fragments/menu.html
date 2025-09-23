@@ -10,6 +10,8 @@
                     <a class="nav-link text-white" th:href="@{/cars}">Vehicles</a>
                     <a class="nav-link text-white" th:if="${!isAdmin}" th:href="@{/reservations}">My Reservations</a>
                     <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/create-car}">Create Car</a>
+                    <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/brands}">Brands</a>
+                    <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/categories}">Categories</a>
                 </div>
                 <div class="navbar-nav ms-auto">
                     <a class=" btn btn-danger cursor-pointer " th:href="@{/logout}">Logout</a>
