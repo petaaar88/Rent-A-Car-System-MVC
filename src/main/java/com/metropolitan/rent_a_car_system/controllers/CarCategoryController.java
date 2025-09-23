@@ -2,62 +2,65 @@ package com.metropolitan.rent_a_car_system.controllers;
 
 import com.metropolitan.rent_a_car_system.enums.UserRole;
 import com.metropolitan.rent_a_car_system.exceptions.BrandException;
-import com.metropolitan.rent_a_car_system.models.CarBrand;
+import com.metropolitan.rent_a_car_system.exceptions.CategoryException;
+import com.metropolitan.rent_a_car_system.models.CarCategory;
 import com.metropolitan.rent_a_car_system.models.SessionUser;
-import com.metropolitan.rent_a_car_system.services.CarBrandService;
+import com.metropolitan.rent_a_car_system.services.CarCategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
 
 @Controller
-public class CarBrandController {
-
-    private final CarBrandService carBrandService;
+public class CarCategoryController {
+    private final CarCategoryService carCategoryService;
     private final SessionUser sessionUser;
 
-    public CarBrandController(CarBrandService carBrandService, SessionUser sessionUser) {
-        this.carBrandService = carBrandService;
+    public CarCategoryController(CarCategoryService carCategoryService, SessionUser sessionUser) {
+        this.carCategoryService = carCategoryService;
         this.sessionUser = sessionUser;
     }
 
-    @GetMapping("/brands")
-    public String getBrands(Model model) {
+    @GetMapping("/categories")
+    public String getCategories(Model model) {
 
         if(!sessionUser.isLoggedIn()) return "redirect:/login";
         if(!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
 
-        List<CarBrand> carBrands = carBrandService.getCarBrands();
-        model.addAttribute("brands", carBrands);
+        List<CarCategory> carCategories = carCategoryService.getCarCategories();
+        model.addAttribute("categories", carCategories);
         model.addAttribute("deleteError",false);
         model.addAttribute("createError",false);
         model.addAttribute("isAdmin",true);
 
-        return "brands";
+        return "categories";
     }
 
-    @PostMapping("/brands/{id}/delete")
-    public String deleteCarBrand(@PathVariable("id") UUID id, Model model) {
+    @PostMapping("/categories/{id}/delete")
+    public String deleteCarCategory(@PathVariable("id") UUID id, Model model) {
 
 
         if(!sessionUser.isLoggedIn()) return "redirect:/login";
         if(!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
 
 
-        if(!carBrandService.deleteCarBrand(id))
+        if(!carCategoryService.deleteCarCategory(id))
             model.addAttribute("deleteError",true);
 
-        model.addAttribute("brands", carBrandService.getCarBrands());
+        model.addAttribute("categories", carCategoryService.getCarCategories());
         model.addAttribute("createError", false);
         model.addAttribute("isAdmin", sessionUser.getRole().equals(UserRole.ADMIN));
 
-        return "brands";
+        return "categories";
     }
 
-    @PostMapping("/brands")
-    public String addCarBrand(@RequestParam String name,
+    @PostMapping("/categories")
+    public String addCarCategory(@RequestParam String name,
                               @RequestParam String description,
                               Model model) {
 
@@ -65,17 +68,17 @@ public class CarBrandController {
         if(!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
 
         try{
-            carBrandService.addCarBrand(name,description);
+            carCategoryService.addCarCategory(name,description);
         }
-        catch(BrandException e){
-            model.addAttribute("brands", carBrandService.getCarBrands());
+        catch(CategoryException e){
+            model.addAttribute("categories", carCategoryService.getCarCategories());
             model.addAttribute("createError", true);
             model.addAttribute("createErrorMessage", e.getMessage());
             model.addAttribute("isAdmin", sessionUser.getRole().equals(UserRole.ADMIN));
             model.addAttribute("deleteError",false);
 
-            return "brands";
+            return "categories";
         }
-        return "redirect:/brands";
+        return "redirect:/categories";
     }
 }

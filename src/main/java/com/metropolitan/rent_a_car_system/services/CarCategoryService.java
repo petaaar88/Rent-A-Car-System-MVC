@@ -1,6 +1,7 @@
 package com.metropolitan.rent_a_car_system.services;
 
 import com.metropolitan.rent_a_car_system.db.Database;
+import com.metropolitan.rent_a_car_system.exceptions.CategoryException;
 import com.metropolitan.rent_a_car_system.models.CarCategory;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,25 @@ public class CarCategoryService {
         )));
     }
 
+    public boolean deleteCarCategory(UUID id) {
+        boolean existsCarWithCategory = db.getCars().stream()
+                .anyMatch(car -> car.getCategory().getId().equals(id));
+
+        if (existsCarWithCategory)
+            return false;
+
+        return db.getCarCategories().removeIf(carCategory -> carCategory.getId().equals(id));
+    }
+
+    public void addCarCategory(String name, String description)throws CategoryException {
+        if (db.getCarCategories().stream().anyMatch(carCategory -> carCategory.getName().equals(name)))
+            throw new CategoryException("Category with name " + name + " already exists.");
+
+        if(name.trim().length() == 0 || description.trim().length() == 0)
+            throw new CategoryException("Category name and description cannot be empty.");
+
+        db.getCarCategories().add(new CarCategory(UUID.randomUUID(), name, description));
+    }
 
     public List<CarCategory> getCarCategories() {
         return db.getCarCategories();
