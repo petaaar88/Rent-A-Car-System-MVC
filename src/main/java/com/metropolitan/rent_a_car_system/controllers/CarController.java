@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -97,6 +98,34 @@ public class CarController {
         return "redirect:/cars";
     }
 
+    @PostMapping("/cars/{id}/update")
+    public String updateCar(@PathVariable("id")UUID id,
+                            @RequestParam String model,
+                            @RequestParam String brand,
+                            @RequestParam String category,
+                            @RequestParam String engineType,
+                            @RequestParam double pricePerDay,
+                            @RequestParam String color,
+                            @RequestParam int year,
+                            @RequestParam String registrationNumber,
+                            @RequestParam double milage,
+                            @RequestParam int horsePower,
+                            Model modelUI,
+                            RedirectAttributes redirectAttributes) {
+        if (!sessionUser.isLoggedIn()) return "redirect:/login";
+        if (!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
+
+        try{
+            carService.updateCar(id, model, brand, category, engineType, pricePerDay, color, year, registrationNumber, milage, horsePower);
+        }
+        catch (CreateCarException e){
+            redirectAttributes.addFlashAttribute("updateError", true);
+            redirectAttributes.addFlashAttribute("updateErrorMessage", e.getMessage());
+        }
+
+        return "redirect:/cars/" + id;
+    }
+
     @GetMapping("/cars/{id}")
     public String getCar(@PathVariable("id")UUID id, Model model) {
         if (!sessionUser.isLoggedIn()) return "redirect:/login";
@@ -114,6 +143,8 @@ public class CarController {
             AllReservationsDTO allReservations = carService.getCarReservations(id);
             model.addAttribute("currentReservations", allReservations.current);
             model.addAttribute("pastReservations", allReservations.past);
+            model.addAttribute("brands", carBrandService.getCarBrands());
+            model.addAttribute("categories", carCategoryService.getCarCategories());
         }
 
         return "car-details";

@@ -61,6 +61,56 @@
                 </li>
             </ul>
         </div>
+
+        <h3 class="mt-4">Update Car</h3>
+        <div th:if="${updateError}" th:text="${updateErrorMessage}" class="alert alert-danger"></div>
+        <form th:action="@{/cars/{id}/update(id=${car.id})}" method="post" class="mt-4 mb-5">
+            <div class="mb-3">
+                <input type="text"  th:value="${car.model}" maxlength="20" name="model" class="form-control" placeholder="Model" required/>
+            </div>
+            <div class="mb-3">
+                    <select class="form-select" name="brand" aria-label="Select Brand" required>
+                        <option value="" disabled>Select Brand</option>
+                        <option th:each="brand : ${brands}" th:value="${brand.name}" th:selected="${brand.name == car.brand}" th:text="${brand.name}"></option>
+                    </select>
+            </div>
+            <div class="mb-3">
+                <select class="form-select" aria-label="Select Category" name="category" required>
+                    <option value="" disabled >Select Category</option>
+                    <option th:each="category : ${categories}" th:selected="${category.name == car.category}" th:value="${category.name}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <select class="form-select" id="engineType" name="engineType" required>
+                    <option value="" disabled >Select Engine</option>
+                    <option th:each="type : ${T(com.metropolitan.rent_a_car_system.enums.EngineType).values()}"
+                            th:value="${type}"
+                            th:selected="${type == car.engineType}"
+                            th:text="${type.getDisplayName()}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <input type="number" min="0"  name="pricePerDay" th:value="${car.pricePerDay}" class="form-control" placeholder="Price Per Day" required/>
+            </div>
+            <div class="mb-3">
+                <input type="text" name="color" th:value="${car.color}"  maxlength="20" class="form-control" placeholder="Color" required/>
+            </div>
+            <div class="mb-3">
+                <input type="number" min="1900" name="year" th:value="${car.year}"  class="form-control" placeholder="Year of Manufacture" required/>
+            </div>
+            <div class="mb-3">
+                <input type="text" maxlength="20"  name="registrationNumber" th:value="${car.registrationNumber}" class="form-control" placeholder="Registration Number" required/>
+            </div>
+            <div class="mb-3">
+                <input type="number" min="0" name="milage" th:value="${car.mileage}"  class="form-control" placeholder="Milage" required/>
+            </div>
+            <div class="mb-3">
+                <input type="number" min="0" name="horsePower" th:value="${car.horsePower}"  class="form-control" placeholder="Horse Power" required/>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+        <br/>
+        <br/>
     </div>
     <div th:if="${!unavailable && !isAdmin}" class="alert alert-primary">
         <div th:replace="~{fragments/reservation-form :: reservation-form(car=${car})}"></div>

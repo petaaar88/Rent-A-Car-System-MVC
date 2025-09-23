@@ -72,6 +72,23 @@ public class CarService {
 
     }
 
+    public void updateCar(UUID id, String model, String brand, String category, String engineType, double pricePerDay, String color, int year, String registrationNumber, double milage, int horsePower) throws CreateCarException {
+        CarValidator.validate(model, brand, category, color, registrationNumber, EngineType.valueOf(engineType), pricePerDay, year, milage, horsePower);
+        db.getCars().stream().filter(car -> car.getId().equals(id)).findFirst().ifPresent(car -> {
+            car.setBrand(db.getCarBrands().stream().filter(carBrand -> carBrand.getName().equals(brand)).findFirst().orElse(null));
+            car.setCategory(db.getCarCategories().stream().filter(carCategory -> carCategory.getName().equals(category)).findFirst().orElse(null));
+            car.setModel(model);
+            car.setRegistrationNumber(registrationNumber);
+            car.setColor(color);
+            car.setYear(year);
+            car.setEngineType(EngineType.valueOf(engineType));
+            car.setHorsePower(horsePower);
+            car.setMileage(milage);
+            car.setPricePerDay(pricePerDay);
+        });
+
+    }
+
     public List<CarOverviewDTO> search(String search, String brand, String category, String engineType) {
         return db.getCars().stream()
                 .filter(car -> {
