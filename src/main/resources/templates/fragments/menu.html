@@ -9,6 +9,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link text-white" th:href="@{/cars}">Vehicles</a>
                     <a class="nav-link text-white" th:if="${!isAdmin}" th:href="@{/reservations}">My Reservations</a>
+                    <a class="nav-link text-white" th:if="${!isAdmin}" th:href="@{/profile}">Profile</a>
                     <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/create-car}">Create Car</a>
                     <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/brands}">Brands</a>
                     <a class="nav-link text-white" th:if="${isAdmin}" th:href="@{/categories}">Categories</a>

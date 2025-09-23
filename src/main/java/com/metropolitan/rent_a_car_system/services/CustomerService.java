@@ -1,6 +1,7 @@
 package com.metropolitan.rent_a_car_system.services;
 
 import com.metropolitan.rent_a_car_system.db.Database;
+import com.metropolitan.rent_a_car_system.dto.CustomerDTO;
 import com.metropolitan.rent_a_car_system.models.Customer;
 import com.metropolitan.rent_a_car_system.models.Moderator;
 import jakarta.annotation.PostConstruct;
@@ -50,6 +51,14 @@ public class CustomerService {
 
     public boolean customerExists(String username) {
         return db.getCustomers().stream().anyMatch(customer -> customer.getUsername().equalsIgnoreCase(username));
+    }
+
+    public CustomerDTO getCustomer(UUID id) {
+        Optional<Customer> optionalCustomer = getCustomerById(id);
+        if (optionalCustomer.isPresent()) {
+            return optionalCustomer.get().toCustomerDTO();
+        }
+        return null;
     }
 
 

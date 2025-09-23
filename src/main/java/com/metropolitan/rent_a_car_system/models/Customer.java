@@ -1,5 +1,7 @@
 package com.metropolitan.rent_a_car_system.models;
 
+import com.metropolitan.rent_a_car_system.dto.CustomerDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -90,5 +92,9 @@ public class Customer {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public CustomerDTO toCustomerDTO() {
+        return new CustomerDTO(this.id, this.fullName, this.email, this.username, this.phone, this.address, this.reservations.size());
     }
 }
