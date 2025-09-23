@@ -33,6 +33,17 @@
                         Vehicle is currently unavailable.
                     </div>
 
+                    <div th:if="${isAdmin && car.isVisible}" class="mt-4">
+                        <form th:action="@{/cars/{id}/remove(id=${car.id})}" method="post">
+                            <button type="submit" class="btn btn-danger">Remove from catalog</button>
+                        </form>
+                    </div>
+                    <div th:if="${isAdmin && !car.isVisible}" class="mt-4">
+                        <form th:action="@{/cars/{id}/list(id=${car.id})}" method="post">
+                            <button type="submit" class="btn btn-danger">Add to catalog</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>

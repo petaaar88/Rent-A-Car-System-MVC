@@ -21,6 +21,7 @@ public class Car {
     private boolean isAvailable;
     private double mileage;
     private List<Reservation> reservations;
+    private boolean isVisible;
 
     public Car() {}
 
@@ -38,6 +39,7 @@ public class Car {
         this.isAvailable = isAvailable;
         this.mileage = mileage;
         this.reservations = reservations;
+        this.isVisible = true;
     }
 
     public UUID getId() {
@@ -142,6 +144,14 @@ public class Car {
 
     public void setCategory(CarCategory category) {
         this.category = category;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 
     public CarOverviewDTO toCarOverview() {

@@ -12,7 +12,6 @@ import com.metropolitan.rent_a_car_system.models.CarCategory;
 import com.metropolitan.rent_a_car_system.utils.CarValidator;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +88,7 @@ public class CarService {
 
     }
 
-    public List<CarOverviewDTO> search(String search, String brand, String category, String engineType) {
+    public List<CarOverviewDTO> search(String search, String brand, String category, String engineType, boolean isAdmin) {
         return db.getCars().stream()
                 .filter(car -> {
                     boolean matches = true;
@@ -116,6 +115,10 @@ public class CarService {
                         matches = matches && car.getEngineType().name().equalsIgnoreCase(engineType);
                     }
 
+                    if (!isAdmin) {
+                        matches = matches && car.isVisible();
+                    }
+
                     return matches;
                 })
                 .map( car -> car.toCarOverview()).toList();
@@ -125,8 +128,17 @@ public class CarService {
         Car car2 =db.getCars().stream().filter(car -> car.getId().equals(id)).findFirst().orElse(null);
 
         CarDetailsDTO carDetailsDTO = car2 != null ? car2.toCarDetails() : null;
+        carDetailsDTO.isVisible = car2.isVisible();
 
         return carDetailsDTO;
+    }
+
+    public void removeFromCatalog(UUID id) {
+        db.getCars().stream().filter(car -> car.getId().equals(id)).findFirst().ifPresent(car -> car.setVisible(false));
+    }
+
+    public void addToCatalog(UUID id) {
+        db.getCars().stream().filter(car -> car.getId().equals(id)).findFirst().ifPresent(car -> car.setVisible(true));
     }
 
     public AllReservationsDTO getCarReservations(UUID carId) {

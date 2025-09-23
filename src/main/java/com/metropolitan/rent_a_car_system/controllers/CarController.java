@@ -2,7 +2,6 @@ package com.metropolitan.rent_a_car_system.controllers;
 
 import com.metropolitan.rent_a_car_system.dto.AllReservationsDTO;
 import com.metropolitan.rent_a_car_system.dto.CarDetailsDTO;
-import com.metropolitan.rent_a_car_system.enums.EngineType;
 import com.metropolitan.rent_a_car_system.enums.UserRole;
 import com.metropolitan.rent_a_car_system.exceptions.CreateCarException;
 import com.metropolitan.rent_a_car_system.models.SessionUser;
@@ -28,7 +27,6 @@ public class CarController {
     private final CarService carService;
     private final SessionUser sessionUser;
     private final DataFormatter dataFormatUtils;
-
 
 
     public CarController(CarBrandService carBrandService, CarCategoryService carCategoryService, CarService carService, SessionUser sessionUser, DataFormatter dataFormatUtils) {
@@ -61,7 +59,7 @@ public class CarController {
             Model model) {
         if (!sessionUser.isLoggedIn()) return "redirect:/login";
 
-        model.addAttribute("cars", carService.search(search, brand, category, engineType));
+        model.addAttribute("cars", carService.search(search, brand, category, engineType, sessionUser.getRole().equals(UserRole.ADMIN)));
         model.addAttribute("brands", carBrandService.getCarBrands());
         model.addAttribute("categories", carCategoryService.getCarCategories());
         model.addAttribute("isAdmin",sessionUser.getRole().equals(UserRole.ADMIN));
@@ -126,11 +124,44 @@ public class CarController {
         return "redirect:/cars/" + id;
     }
 
+    @PostMapping("/cars/{id}/remove")
+    public String removeCar(@PathVariable("id")UUID id) {
+        if (!sessionUser.isLoggedIn()) return "redirect:/login";
+        if (!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
+
+
+        CarDetailsDTO car = carService.getCar(id);
+        if (car == null)
+            return "redirect:/cars";
+
+        carService.removeFromCatalog(id);
+
+        return "redirect:/cars";
+    }
+
+    @PostMapping("/cars/{id}/list")
+    public String listCar(@PathVariable("id")UUID id) {
+        if (!sessionUser.isLoggedIn()) return "redirect:/login";
+        if (!sessionUser.getRole().equals(UserRole.ADMIN)) return "redirect:/cars";
+
+
+        CarDetailsDTO car = carService.getCar(id);
+        if (car == null)
+            return "redirect:/cars";
+
+        carService.addToCatalog(id);
+
+        return "redirect:/cars";
+    }
+
     @GetMapping("/cars/{id}")
     public String getCar(@PathVariable("id")UUID id, Model model) {
         if (!sessionUser.isLoggedIn()) return "redirect:/login";
         CarDetailsDTO car = carService.getCar(id);
         if (car == null)
+            return "redirect:/cars";
+
+        if(sessionUser.getRole().equals(UserRole.USER) && !car.isVisible)
             return "redirect:/cars";
 
         model.addAttribute("car", car);
